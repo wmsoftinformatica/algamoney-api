@@ -26,6 +26,7 @@
 	      <artifactId>mysql-connector-java</artifactId>
 	      <scope>runtime</scope>
 	    </dependency>
+	    <!-- Migracoes - flyway -->
 	    <dependency>
       	   <groupId>org.flywaydb</groupId>
       	   <artifactId>flyway-core</artifactId>
