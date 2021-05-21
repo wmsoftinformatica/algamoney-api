@@ -1,3 +1,4 @@
+
 package com.example.algamoney.api.model;
 
 import java.io.Serializable;
@@ -7,40 +8,43 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-//import com.sun.istack.NotNull;
 
 @Entity
 @Table(name = "categoria")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Categoria implements Serializable{
-	
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+public class Categoria implements Serializable {
+
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;
-	
-	//@NotNull
+
+	@NotNull
 	private String nome;
-	
-	 
+
 	public Long getCodigo() {
 		return codigo;
 	}
+
 	public void setCodigo(Long codigo) {
 		this.codigo = codigo;
 	}
+
 	public String getNome() {
 		return nome;
 	}
+
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -48,6 +52,7 @@ public class Categoria implements Serializable{
 		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
