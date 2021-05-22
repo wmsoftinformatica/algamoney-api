@@ -10,7 +10,7 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "categoria")
+@Table(name = "pessoa")
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class Pessoa {
 
@@ -19,8 +19,6 @@ public class Pessoa {
 	private Long codigo;
 
 	private String nome;
-
-	private Boolean ativo;
 
 	private String logradouro;
 
@@ -36,6 +34,16 @@ public class Pessoa {
 
 	private String estado;
 
+	private Boolean ativo;
+
+	public Boolean getAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(Boolean ativo) {
+		this.ativo = ativo;
+	}
+
 	public Long getCodigo() {
 		return codigo;
 	}
@@ -50,14 +58,6 @@ public class Pessoa {
 
 	public void setNome(String nome) {
 		this.nome = nome;
-	}
-
-	public Boolean getAtivo() {
-		return ativo;
-	}
-
-	public void setAtivo(Boolean ativo) {
-		this.ativo = ativo;
 	}
 
 	public String getLogradouro() {
