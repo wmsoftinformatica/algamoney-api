@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -66,6 +68,19 @@ public class AlgamaneyExeptionHandler extends ResponseEntityExceptionHandler {
 
 	}
 
+	@ExceptionHandler({ EntityNotFoundException.class })
+
+	public ResponseEntity<Object> handleEmptyResultDataAccessException(EntityNotFoundException ex, WebRequest request) {
+
+		String mensagemUsuario =
+				messageSource.getMessage("recurso.nao-encontrado2", null, LocaleContextHolder.getLocale());
+		String mensagemDesenvolvedor = ex.toString();
+		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
+
+		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+
+	}
+
 	private List<Erro> criarListaDeErros(BindingResult bindingResult) {
 		List erros = new ArrayList<>();
 
@@ -84,18 +99,17 @@ public class AlgamaneyExeptionHandler extends ResponseEntityExceptionHandler {
 		private String mensagemUsuario;
 		private String mensagemDesenvolvedor;
 
+		public Erro(String mensagemUsuario, String mensagemDesenvolvedor) {
+			this.mensagemUsuario = mensagemUsuario;
+			this.mensagemDesenvolvedor = mensagemDesenvolvedor;
+		}
+
 		public String getMensagemUsuario() {
 			return mensagemUsuario;
 		}
 
 		public String getMensagemDesenvolvedor() {
 			return mensagemDesenvolvedor;
-		}
-
-		public Erro(String mensagemUsuario, String mensagemDesenvolvedor) {
-			super();
-			this.mensagemUsuario = mensagemUsuario;
-			this.mensagemDesenvolvedor = mensagemDesenvolvedor;
 		}
 
 	}
