@@ -15,8 +15,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "lancamento")
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class Lancamento {
 
 	@Id

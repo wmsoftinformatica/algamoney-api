@@ -76,4 +76,15 @@ public class PessoaResource {
 
 	}
 
+	// @GetMapping("/{codigo}")
+	// public Pessoa buscarPeloCodigo(@PathVariable Long codigo) {
+	// return pessoaRepository.getOne(codigo);
+	// }
+
+	@GetMapping("/{codigo}")
+	public ResponseEntity<Pessoa> buscarPeloCodigo(@PathVariable Long codigo) {
+		Pessoa pessoa = pessoaRepository.getOne(codigo);
+		return pessoa != null ? ResponseEntity.ok(pessoa) : ResponseEntity.notFound().build();
+	}
+
 }
