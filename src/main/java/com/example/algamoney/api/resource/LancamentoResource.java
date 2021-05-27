@@ -1,7 +1,10 @@
 
 package com.example.algamoney.api.resource;
 
+import java.net.URI;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.example.algamoney.api.model.Lancamento;
 import com.example.algamoney.api.repository.LancamentoRepository;
@@ -42,8 +46,16 @@ public class LancamentoResource {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public void criar(@RequestBody Lancamento lancamento) {
-		lancamentoRepository.save(lancamento);
+	public ResponseEntity<Lancamento> criar(@RequestBody Lancamento lancamento, HttpServletResponse response) {
+		Lancamento lancamentoSalvo = lancamentoRepository.save(lancamento);
+
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
+				.path("/{codigo}")
+				.buildAndExpand(lancamentoSalvo.getCodigo())
+				.toUri();
+		response.setHeader("Location", uri.toASCIIString());
+
+		return ResponseEntity.created(uri).body(lancamentoSalvo);
 
 	}
 
