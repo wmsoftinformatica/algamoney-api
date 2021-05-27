@@ -30,7 +30,7 @@ public class PessoaService {
 
 	}
 
-	private Pessoa buscarPessoaPeloCodigo(Long codigo) {
+	public Pessoa buscarPessoaPeloCodigo(Long codigo) {
 		Pessoa pessoaSalva = pessoaRepository.getOne(codigo);
 		System.out.println(pessoaSalva);
 		if (pessoaSalva == null) {
