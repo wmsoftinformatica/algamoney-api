@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.example.algamoney.api.exeptionhandler.AlgamaneyExeptionHandler.Erro;
 import com.example.algamoney.api.model.Lancamento;
 import com.example.algamoney.api.repository.LancamentoRepository;
+import com.example.algamoney.api.repository.filter.LancamentoFilter;
 import com.example.algamoney.api.service.LancamentoService;
 import com.example.algamoney.api.service.exception.PessoaInexistenteOuInativaException;
 
@@ -39,18 +41,16 @@ public class LancamentoResource {
 	@Autowired
 	private LancamentoService lancamentoService;
 
-	@GetMapping
-	public List<Lancamento> listar() {
-		return lancamentoRepository.findAll(); // listar todos os dados//
-	}
-
-	// @GetMapping("/{codigo}")
-	// public Lancamento buscaPeloCodigo(@PathVariable Long codigo) {
-	// return lancamentoRepository.getOne(codigo);
-	// }
+	@Autowired
+	private ApplicationEventPublisher publisher;
 
 	@Autowired
 	private MessageSource messageSource;
+
+	@GetMapping
+	public List<Lancamento> pesquisar(LancamentoFilter lancamentoFilter) {
+		return lancamentoRepository.findAll(); // listar todos os dados//
+	}
 
 	@GetMapping("/{codigo}")
 	public ResponseEntity<Lancamento> buscarPeloCodigo(@PathVariable Long codigo) {
