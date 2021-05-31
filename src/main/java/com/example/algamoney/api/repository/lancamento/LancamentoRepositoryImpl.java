@@ -15,6 +15,7 @@ import javax.persistence.criteria.Root;
 import org.apache.commons.lang3.StringUtils;
 
 import com.example.algamoney.api.model.Lancamento;
+import com.example.algamoney.api.model.Lancamento_;
 import com.example.algamoney.api.repository.filter.LancamentoFilter;
 
 public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery {
@@ -44,18 +45,18 @@ public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery {
 		List<Predicate> predicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(lancamentoFilter.getDescricao())) {
-			predicates.add(builder.like(builder.lower(root.get("descricao")),
+			predicates.add(builder.like(builder.lower(root.get(Lancamento_.descricao)),
 					"%" + lancamentoFilter.getDescricao().toLowerCase() + "%"));
-
 		}
 
 		if (lancamentoFilter.getDataVencimentoDe() != null) {
-			// predicates.add(e)
-
+			predicates.add(builder.greaterThanOrEqualTo(root.get(Lancamento_.dataVencimento),
+					lancamentoFilter.getDataVencimentoDe()));
 		}
 
-		if (lancamentoFilter.getDataVencimentoDe() != null) {
-			// predicates.add(e)
+		if (lancamentoFilter.getDataVencimentoAte() != null) {
+			predicates.add(builder.lessThanOrEqualTo(root.get(Lancamento_.dataVencimento),
+					lancamentoFilter.getDataVencimentoAte()));
 		}
 
 		return predicates.toArray(new Predicate[predicates.size()]);
