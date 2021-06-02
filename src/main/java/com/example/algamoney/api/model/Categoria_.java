@@ -1,4 +1,3 @@
-
 package com.example.algamoney.api.model;
 
 import javax.annotation.Generated;
@@ -13,3 +12,4 @@ public abstract class Categoria_ {
 	public static volatile SingularAttribute<Categoria, String> nome;
 
 }
+

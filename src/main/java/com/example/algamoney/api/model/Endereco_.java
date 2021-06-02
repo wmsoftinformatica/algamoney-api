@@ -1,4 +1,3 @@
-
 package com.example.algamoney.api.model;
 
 import javax.annotation.Generated;
@@ -16,4 +15,6 @@ public abstract class Endereco_ {
 	public static volatile SingularAttribute<Endereco, String> logradouro;
 	public static volatile SingularAttribute<Endereco, String> bairro;
 	public static volatile SingularAttribute<Endereco, String> cep;
+
 }
+

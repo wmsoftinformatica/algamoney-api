@@ -1,4 +1,3 @@
-
 package com.example.algamoney.api.resource;
 
 import java.util.List;
@@ -27,28 +26,26 @@ public class CategoriaResource {
 
 	@Autowired
 	private CategoriaRepository categoriaRepository;
-
+	
 	@Autowired
 	private ApplicationEventPublisher publisher;
-
+	
 	@GetMapping
 	public List<Categoria> listar() {
 		return categoriaRepository.findAll();
 	}
-
+	
 	@PostMapping
 	public ResponseEntity<Categoria> criar(@Valid @RequestBody Categoria categoria, HttpServletResponse response) {
 		Categoria categoriaSalva = categoriaRepository.save(categoria);
-
 		publisher.publishEvent(new RecursoCriadoEvent(this, response, categoriaSalva.getCodigo()));
-
 		return ResponseEntity.status(HttpStatus.CREATED).body(categoriaSalva);
 	}
-
+	
 	@GetMapping("/{codigo}")
 	public ResponseEntity<Categoria> buscarPeloCodigo(@PathVariable Long codigo) {
-		Categoria categoria = categoriaRepository.getOne(codigo);
-		return categoria != null ? ResponseEntity.ok(categoria) : ResponseEntity.notFound().build();
+		 Categoria categoria = categoriaRepository.findOne(codigo);
+		 return categoria != null ? ResponseEntity.ok(categoria) : ResponseEntity.notFound().build();
 	}
-
+	
 }

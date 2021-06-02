@@ -1,4 +1,3 @@
-
 package com.example.algamoney.api.model;
 
 import javax.persistence.Embedded;
@@ -8,33 +7,26 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "pessoa")
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class Pessoa {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;
 
+	@NotNull
 	private String nome;
 
 	@Embedded
 	private Endereco endereco;
 
+	@NotNull
 	private Boolean ativo;
-
-	public Boolean getAtivo() {
-		return ativo;
-	}
-
-	public void setAtivo(Boolean ativo) {
-		this.ativo = ativo;
-	}
 
 	public Long getCodigo() {
 		return codigo;
@@ -60,6 +52,14 @@ public class Pessoa {
 		this.endereco = endereco;
 	}
 
+	public Boolean getAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(Boolean ativo) {
+		this.ativo = ativo;
+	}
+	
 	@JsonIgnore
 	@Transient
 	public boolean isInativo() {
@@ -90,5 +90,5 @@ public class Pessoa {
 			return false;
 		return true;
 	}
-
+	
 }

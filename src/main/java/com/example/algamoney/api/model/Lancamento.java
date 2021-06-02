@@ -1,4 +1,3 @@
-
 package com.example.algamoney.api.model;
 
 import java.math.BigDecimal;
@@ -16,17 +15,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 @Entity
 @Table(name = "lancamento")
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class Lancamento {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;
-
+	
 	@NotNull
 	private String descricao;
 
