@@ -1,11 +1,19 @@
 
 package com.example.algamoney.api.resource;
 
+import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -17,12 +25,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.algamoney.api.event.RecursoCriadoEvent;
 import com.example.algamoney.api.model.Pessoa;
 import com.example.algamoney.api.repository.PessoaRepository;
+import com.example.algamoney.api.scheduleExcelExporter.PessoaExcelExporter;
 import com.example.algamoney.api.service.PessoaService;
 
 @RestController
@@ -40,7 +51,41 @@ public class PessoaResource {
 
 	@GetMapping
 	public List<Pessoa> listar() {
+
 		return pessoaRepository.findAll();
+	}
+
+	@GetMapping("/exportarexcel")
+	// @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
+	public void exportar(final HttpServletResponse response) throws IOException {
+		final List<Pessoa> pessoas = pessoaRepository.findAll();
+		response.setContentType("application/octet-stream");
+		final PessoaExcelExporter pessoaExcelExporter = new PessoaExcelExporter(pessoas);
+
+		pessoaExcelExporter.export(response);
+
+	}
+
+	@PostMapping("/importarexcel")
+	public void
+			upload(@RequestParam final MultipartFile arquivo) throws Exception, InvalidFormatException, IOException {
+		final Workbook workbook = WorkbookFactory.create(arquivo.getInputStream());
+		final Sheet sheet = workbook.getSheetAt(0);
+		final Iterator<Row> rowIterator = sheet.rowIterator();
+
+		new Pessoa(null, null);
+
+		while (rowIterator.hasNext()) {
+			final Row row = rowIterator.next();
+
+			final Cell celulaCodigo = row.getCell(0);
+			final Cell nome = row.getCell(1);
+			System.out.println(celulaCodigo);
+			System.out.println(nome);
+			System.out.println("------------------------------------------------------");
+
+		}
+
 	}
 
 	@PostMapping

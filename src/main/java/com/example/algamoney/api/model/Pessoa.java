@@ -1,3 +1,4 @@
+
 package com.example.algamoney.api.model;
 
 import javax.persistence.Embedded;
@@ -28,11 +29,17 @@ public class Pessoa {
 	@NotNull
 	private Boolean ativo;
 
+	public Pessoa(final Long codigo, final String nome) {
+		super();
+		this.codigo = codigo;
+		this.nome = nome;
+	}
+
 	public Long getCodigo() {
 		return codigo;
 	}
 
-	public void setCodigo(Long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 
@@ -40,7 +47,7 @@ public class Pessoa {
 		return nome;
 	}
 
-	public void setNome(String nome) {
+	public void setNome(final String nome) {
 		this.nome = nome;
 	}
 
@@ -48,7 +55,7 @@ public class Pessoa {
 		return endereco;
 	}
 
-	public void setEndereco(Endereco endereco) {
+	public void setEndereco(final Endereco endereco) {
 		this.endereco = endereco;
 	}
 
@@ -56,39 +63,44 @@ public class Pessoa {
 		return ativo;
 	}
 
-	public void setAtivo(Boolean ativo) {
+	public void setAtivo(final Boolean ativo) {
 		this.ativo = ativo;
 	}
-	
+
 	@JsonIgnore
 	@Transient
 	public boolean isInativo() {
-		return !this.ativo;
+		return !ativo;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
+		result = prime * result + (codigo == null ? 0 : codigo.hashCode());
 		return result;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
+	public boolean equals(final Object obj) {
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
-		Pessoa other = (Pessoa) obj;
+		}
+		final Pessoa other = (Pessoa) obj;
 		if (codigo == null) {
-			if (other.codigo != null)
+			if (other.codigo != null) {
 				return false;
-		} else if (!codigo.equals(other.codigo))
+			}
+		} else if (!codigo.equals(other.codigo)) {
 			return false;
+		}
 		return true;
 	}
-	
+
 }
