@@ -69,8 +69,4 @@ public class PessoaExcelExporter {
 
 	}
 
-	// public List<ScheduleEntity> getListSchedules() {
-	// return listSchedules;
-	// }
-
 }

@@ -56,7 +56,7 @@ public class PessoaResource {
 	}
 
 	@GetMapping("/exportarexcel")
-	// @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
+
 	public void exportar(final HttpServletResponse response) throws IOException {
 		final List<Pessoa> pessoas = pessoaRepository.findAll();
 		response.setContentType("application/octet-stream");
