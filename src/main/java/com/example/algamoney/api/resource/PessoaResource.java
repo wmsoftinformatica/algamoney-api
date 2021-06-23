@@ -73,15 +73,32 @@ public class PessoaResource {
 		final Sheet sheet = workbook.getSheetAt(0);
 		final Iterator<Row> rowIterator = sheet.rowIterator();
 
-		new Pessoa(null, null);
+		// new Pessoa(null, null);
 
 		while (rowIterator.hasNext()) {
 			final Row row = rowIterator.next();
 
 			final Cell celulaCodigo = row.getCell(0);
 			final Cell nome = row.getCell(1);
+			final Cell logradouro = row.getCell(2);
+			final Cell numero = row.getCell(3);
+			final Cell complemento = row.getCell(4);
+			final Cell bairro = row.getCell(5);
+			final Cell CEP = row.getCell(6);
+			final Cell cidade = row.getCell(7);
+			final Cell estado = row.getCell(8);
+			final Cell ativo = row.getCell(9);
+
 			System.out.println(celulaCodigo);
 			System.out.println(nome);
+			System.out.println(logradouro);
+			System.out.println(numero);
+			System.out.println(complemento);
+			System.out.println(bairro);
+			System.out.println(CEP);
+			System.out.println(cidade);
+			System.out.println(estado);
+			System.out.println(ativo);
 			System.out.println("------------------------------------------------------");
 
 		}

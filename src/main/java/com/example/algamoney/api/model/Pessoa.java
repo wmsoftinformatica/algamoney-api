@@ -29,11 +29,11 @@ public class Pessoa {
 	@NotNull
 	private Boolean ativo;
 
-	public Pessoa(final Long codigo, final String nome) {
-		super();
-		this.codigo = codigo;
-		this.nome = nome;
-	}
+	// public Pessoa(final Long codigo, final String nome) {
+	// super();
+	// this.codigo = codigo;
+	// this.nome = nome;
+	// }
 
 	public Long getCodigo() {
 		return codigo;

@@ -38,6 +38,27 @@ public class PessoaExcelExporter {
 		cell.setCellValue("Nome");
 
 		cell = row.createCell(2);
+		cell.setCellValue("Logradouro");
+
+		cell = row.createCell(3);
+		cell.setCellValue("Numero");
+
+		cell = row.createCell(4);
+		cell.setCellValue("Complemento");
+
+		cell = row.createCell(5);
+		cell.setCellValue("Bairro");
+
+		cell = row.createCell(6);
+		cell.setCellValue("CEP");
+
+		cell = row.createCell(7);
+		cell.setCellValue("Cidade");
+
+		cell = row.createCell(8);
+		cell.setCellValue("Estado");
+
+		cell = row.createCell(9);
 		cell.setCellValue("Ativo");
 
 	}
@@ -54,6 +75,27 @@ public class PessoaExcelExporter {
 			cell.setCellValue(pessoa.getNome());
 
 			cell = row.createCell(2);
+			cell.setCellValue(pessoa.getEndereco().getLogradouro());
+
+			cell = row.createCell(3);
+			cell.setCellValue(pessoa.getEndereco().getNumero());
+
+			cell = row.createCell(4);
+			cell.setCellValue(pessoa.getEndereco().getComplemento());
+
+			cell = row.createCell(5);
+			cell.setCellValue(pessoa.getEndereco().getBairro());
+
+			cell = row.createCell(6);
+			cell.setCellValue(pessoa.getEndereco().getCep());
+
+			cell = row.createCell(7);
+			cell.setCellValue(pessoa.getEndereco().getCidade());
+
+			cell = row.createCell(8);
+			cell.setCellValue(pessoa.getEndereco().getEstado());
+
+			cell = row.createCell(9);
 			cell.setCellValue(pessoa.getAtivo());
 
 		}
