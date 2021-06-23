@@ -101,8 +101,11 @@ public class PessoaResource {
 			System.out.println(ativo);
 			System.out.println("------------------------------------------------------");
 
+			
 		}
 
+		
+	
 	}
 
 	@PostMapping
