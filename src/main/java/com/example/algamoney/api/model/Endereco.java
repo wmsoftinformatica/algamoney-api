@@ -1,3 +1,4 @@
+
 package com.example.algamoney.api.model;
 
 import javax.persistence.Embeddable;
@@ -12,12 +13,34 @@ public class Endereco {
 	private String cep;
 	private String cidade;
 	private String estado;
-	
+
+	public Endereco() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public Endereco(final String logradouro,
+			final String numero,
+			final String complemento,
+			final String bairro,
+			final String cep,
+			final String cidade,
+			final String estado) {
+		super();
+		this.logradouro = logradouro;
+		this.numero = numero;
+		this.complemento = complemento;
+		this.bairro = bairro;
+		this.cep = cep;
+		this.cidade = cidade;
+		this.estado = estado;
+	}
+
 	public String getLogradouro() {
 		return logradouro;
 	}
 
-	public void setLogradouro(String logradouro) {
+	public void setLogradouro(final String logradouro) {
 		this.logradouro = logradouro;
 	}
 
@@ -25,7 +48,7 @@ public class Endereco {
 		return numero;
 	}
 
-	public void setNumero(String numero) {
+	public void setNumero(final String numero) {
 		this.numero = numero;
 	}
 
@@ -33,7 +56,7 @@ public class Endereco {
 		return complemento;
 	}
 
-	public void setComplemento(String complemento) {
+	public void setComplemento(final String complemento) {
 		this.complemento = complemento;
 	}
 
@@ -41,7 +64,7 @@ public class Endereco {
 		return bairro;
 	}
 
-	public void setBairro(String bairro) {
+	public void setBairro(final String bairro) {
 		this.bairro = bairro;
 	}
 
@@ -49,7 +72,7 @@ public class Endereco {
 		return cep;
 	}
 
-	public void setCep(String cep) {
+	public void setCep(final String cep) {
 		this.cep = cep;
 	}
 
@@ -57,7 +80,7 @@ public class Endereco {
 		return cidade;
 	}
 
-	public void setCidade(String cidade) {
+	public void setCidade(final String cidade) {
 		this.cidade = cidade;
 	}
 
@@ -65,7 +88,7 @@ public class Endereco {
 		return estado;
 	}
 
-	public void setEstado(String estado) {
+	public void setEstado(final String estado) {
 		this.estado = estado;
 	}
 }

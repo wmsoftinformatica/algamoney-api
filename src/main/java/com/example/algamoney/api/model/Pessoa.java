@@ -29,12 +29,6 @@ public class Pessoa {
 	@NotNull
 	private Boolean ativo;
 
-	// public Pessoa(final Long codigo, final String nome) {
-	// super();
-	// this.codigo = codigo;
-	// this.nome = nome;
-	// }
-
 	public Long getCodigo() {
 		return codigo;
 	}
@@ -61,6 +55,18 @@ public class Pessoa {
 
 	public Boolean getAtivo() {
 		return ativo;
+	}
+
+	public Pessoa() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public Pessoa(final String nome, final Endereco endereco, final Boolean ativo) {
+		super();
+		this.nome = nome;
+		this.endereco = endereco;
+		this.ativo = ativo;
 	}
 
 	public void setAtivo(final Boolean ativo) {

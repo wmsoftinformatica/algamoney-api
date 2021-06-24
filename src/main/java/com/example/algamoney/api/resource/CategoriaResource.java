@@ -1,5 +1,7 @@
+
 package com.example.algamoney.api.resource;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -27,29 +29,40 @@ public class CategoriaResource {
 
 	@Autowired
 	private CategoriaRepository categoriaRepository;
-	
+
 	@Autowired
 	private ApplicationEventPublisher publisher;
-	
+
 	@GetMapping
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
 	public List<Categoria> listar() {
 		return categoriaRepository.findAll();
 	}
-	
+
+	@GetMapping("/exportarCategoria")
+	public void exportarCategoria(final HttpServletResponse response) throws IOException {
+		categoriaRepository.findAll();
+		response.setContentType("application/octet-strem");
+		// final CategoriaExcelExporter categoriaExelExporter = new CategoriaExcelExporter();
+
+		// categoriaExelExporter.export(response);
+
+	}
+
 	@PostMapping
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_CATEGORIA') and #oauth2.hasScope('write')")
-	public ResponseEntity<Categoria> criar(@Valid @RequestBody Categoria categoria, HttpServletResponse response) {
-		Categoria categoriaSalva = categoriaRepository.save(categoria);
+	public ResponseEntity<Categoria> criar(@Valid @RequestBody final Categoria categoria,
+			final HttpServletResponse response) {
+		final Categoria categoriaSalva = categoriaRepository.save(categoria);
 		publisher.publishEvent(new RecursoCriadoEvent(this, response, categoriaSalva.getCodigo()));
 		return ResponseEntity.status(HttpStatus.CREATED).body(categoriaSalva);
 	}
-	
+
 	@GetMapping("/{codigo}")
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
-	public ResponseEntity<Categoria> buscarPeloCodigo(@PathVariable Long codigo) {
-		 Categoria categoria = categoriaRepository.findOne(codigo);
-		 return categoria != null ? ResponseEntity.ok(categoria) : ResponseEntity.notFound().build();
+	public ResponseEntity<Categoria> buscarPeloCodigo(@PathVariable final Long codigo) {
+		final Categoria categoria = categoriaRepository.findOne(codigo);
+		return categoria != null ? ResponseEntity.ok(categoria) : ResponseEntity.notFound().build();
 	}
-	
+
 }

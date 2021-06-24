@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.algamoney.api.event.RecursoCriadoEvent;
+import com.example.algamoney.api.model.Endereco;
 import com.example.algamoney.api.model.Pessoa;
 import com.example.algamoney.api.repository.PessoaRepository;
 import com.example.algamoney.api.scheduleExcelExporter.PessoaExcelExporter;
@@ -72,13 +73,14 @@ public class PessoaResource {
 		final Workbook workbook = WorkbookFactory.create(arquivo.getInputStream());
 		final Sheet sheet = workbook.getSheetAt(0);
 		final Iterator<Row> rowIterator = sheet.rowIterator();
-
-		// new Pessoa(null, null);
-
 		while (rowIterator.hasNext()) {
+
+			String val1;
+			Boolean val2 = null;
+
 			final Row row = rowIterator.next();
 
-			final Cell celulaCodigo = row.getCell(0);
+			row.getCell(0);
 			final Cell nome = row.getCell(1);
 			final Cell logradouro = row.getCell(2);
 			final Cell numero = row.getCell(3);
@@ -89,23 +91,43 @@ public class PessoaResource {
 			final Cell estado = row.getCell(8);
 			final Cell ativo = row.getCell(9);
 
-			System.out.println(celulaCodigo);
-			System.out.println(nome);
-			System.out.println(logradouro);
-			System.out.println(numero);
-			System.out.println(complemento);
-			System.out.println(bairro);
-			System.out.println(CEP);
-			System.out.println(cidade);
-			System.out.println(estado);
-			System.out.println(ativo);
-			System.out.println("------------------------------------------------------");
+			val1 = ativo.toString();
 
-			
+			if (val1 == "TRUE") {
+				val2 = true;
+
+			} else {
+				val2 = false;
+			}
+
+			final Endereco endereco = new Endereco(logradouro.getStringCellValue(),
+					numero.getStringCellValue(),
+					complemento.getStringCellValue(),
+					bairro.getStringCellValue(),
+					CEP.getStringCellValue(),
+					cidade.getStringCellValue(),
+					estado.getStringCellValue());
+
+			System.out.println("val2>>>>>>>>>>>>>>>> " + val2);
+			final Pessoa pessoa = new Pessoa(nome.getStringCellValue(), endereco, val2);
+
+			if (val1 == "TRUE" || val1 == "FALSE") {
+				System.out.println("-------------------------------------------------------");
+				System.out.println(nome);
+				// System.out.println(logradouro);
+				// System.out.println(numero);
+				// System.out.println(complemento);
+				// System.out.println(bairro);
+				// System.out.println(CEP);
+				// System.out.println(cidade);
+				// System.out.println(estado);
+				System.out.println("Ativo " + val1);
+				System.out.println("-------------------------------------------------------");
+
+				pessoaRepository.save(pessoa);
+			}
 		}
 
-		
-	
 	}
 
 	@PostMapping
