@@ -91,6 +91,11 @@ public class CategoriaResource {
 			final Cell codigo = row.getCell(0);
 			final Cell nome = row.getCell(1);
 
+			// String codigo2;
+			// Long codigoConv;
+			// codigo2 = codigo.toString();
+			// codigoConv = Long.parseLong(codigo2);
+
 			final Categoria categoria = new Categoria(nome.getStringCellValue());
 			System.out.println("------------------------------------");
 			System.out.println("Codigo " + codigo);
@@ -100,7 +105,6 @@ public class CategoriaResource {
 			categoriaRepository.save(categoria);
 		}
 
-		System.out.println("TOTAL DE REGISTROS" + count);
 	}
 
 	@GetMapping("/{codigo}")

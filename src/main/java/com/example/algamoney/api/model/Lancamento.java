@@ -39,16 +39,16 @@ public class Lancamento {
 
 	private String observacao;
 
-	@NotNull
+	// @NotNull
 	@Enumerated(EnumType.STRING)
 	private TipoLancamento tipo;
 
-	@NotNull
+	// @NotNull
 	@ManyToOne
 	@JoinColumn(name = "codigo_categoria")
 	private Categoria categoria;
 
-	@NotNull
+	// @NotNull
 	@ManyToOne
 	@JoinColumn(name = "codigo_pessoa")
 	private Pessoa pessoa;
@@ -58,11 +58,18 @@ public class Lancamento {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Lancamento(final String descricao, final LocalDate dataVencimento, final LocalDate dataPagamento) {
+	public Lancamento(final String descricao,
+			final LocalDate dataVencimento,
+			final LocalDate dataPagamento,
+			final BigDecimal valor,
+			final String observacao) {
 		super();
 		this.descricao = descricao;
 		this.dataVencimento = dataVencimento;
 		this.dataPagamento = dataPagamento;
+		this.valor = valor;
+		this.observacao = observacao;
+
 	}
 
 	public Long getCodigo() {

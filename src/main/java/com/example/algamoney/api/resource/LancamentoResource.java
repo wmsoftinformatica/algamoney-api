@@ -2,6 +2,7 @@
 package com.example.algamoney.api.resource;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -110,6 +111,8 @@ public class LancamentoResource {
 			LocalDate dataPagamentoConv;
 			String dataVencimento2;
 			String dataPagamento2;
+			String valor2;
+			BigDecimal valorConv;
 
 			if (count == 0) {
 				rowIterator.next();
@@ -146,15 +149,26 @@ public class LancamentoResource {
 
 			dataVencimentoConv = LocalDate.parse(dataVencimento2, formatter);
 			dataPagamentoConv = LocalDate.parse(dataPagamento2, formatter);
+			valor2 = valor.toString();
 
-			System.out.println("Data Vencimento String------------" + dataVencimento2);
-			System.out.println("Data Convertida-------------------" + dataVencimentoConv);
-			System.out.println("Data pagamento convertida---------" + dataPagamentoConv);
-			System.out.println("Valor-----------------------------" + valor);
+			valorConv = new BigDecimal(valor2);
 
-			 final Lancamento lancamento = new Lancamento(descricao.getStringCellValue(), dataVencimentoConv, dataPagamentoConv);
+			// final Categoria categoria = new Categoria(Categoria.);
 
-			// lancamentoRepository.save(lancamento);
+			System.out.println("Descricao-------------------------" + descricao);
+			System.out.println("Data Vencimento-------------------" + dataVencimentoConv);
+			System.out.println("Data Pagamento--------------------" + dataPagamentoConv);
+			System.out.println("Valor-----------------------------" + valorConv);
+			System.out.println("Observacao------------------------" + observacao);
+			System.out.println("Codigo Categoria------------------" + codigoCategoria);
+
+			final Lancamento lancamento = new Lancamento(descricao.getStringCellValue(),
+					dataVencimentoConv,
+					dataPagamentoConv,
+					valorConv,
+					observacao.getStringCellValue());
+
+			lancamentoRepository.save(lancamento);
 
 		}
 
