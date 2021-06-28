@@ -42,6 +42,7 @@ import com.example.algamoney.api.event.RecursoCriadoEvent;
 import com.example.algamoney.api.exceptionhandler.AlgamoneyExceptionHandler.Erro;
 import com.example.algamoney.api.exportar.LancamentoExcelExporter;
 import com.example.algamoney.api.model.Lancamento;
+import com.example.algamoney.api.model.TipoLancamento;
 import com.example.algamoney.api.repository.LancamentoRepository;
 import com.example.algamoney.api.repository.filter.LancamentoFilter;
 import com.example.algamoney.api.repository.projection.ResumoLancamento;
@@ -105,6 +106,10 @@ public class LancamentoResource {
 
 		Integer count = 0;
 
+		String descricao;
+		TipoLancamento tipo;
+		Cell cellDescricao;
+
 		while (rowIterator.hasNext()) {
 			final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 			LocalDate dataVencimentoConv;
@@ -123,14 +128,19 @@ public class LancamentoResource {
 			final Row row = rowIterator.next();
 
 			final Cell codigo = row.getCell(0);
-			final Cell descricao = row.getCell(1);
+			cellDescricao = row.getCell(1);
 			final Cell dataVencimento = row.getCell(2);
 			final Cell dataPagamento = row.getCell(3);
 			final Cell valor = row.getCell(4);
 			final Cell observacao = row.getCell(5);
-			final Cell tipo = row.getCell(6);
+
+			final Cell celltipo = row.getCell(6);
+
 			final Cell codigoCategoria = row.getCell(7);
 			final Cell codigoPessoa = row.getCell(8);
+
+			descricao = cellDescricao.getStringCellValue();
+			tipo = celltipo == null ? null : TipoLancamento.valueOf(celltipo.getStringCellValue().trim());
 
 			System.out.println(codigo);
 			System.out.println(descricao);
@@ -162,11 +172,12 @@ public class LancamentoResource {
 			System.out.println("Observacao------------------------" + observacao);
 			System.out.println("Codigo Categoria------------------" + codigoCategoria);
 
-			final Lancamento lancamento = new Lancamento(descricao.getStringCellValue(),
+			final Lancamento lancamento = new Lancamento(descricao,
 					dataVencimentoConv,
 					dataPagamentoConv,
 					valorConv,
-					observacao.getStringCellValue());
+					observacao.getStringCellValue(),
+					tipo);
 
 			lancamentoRepository.save(lancamento);
 
