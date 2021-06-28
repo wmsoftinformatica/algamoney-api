@@ -1,3 +1,4 @@
+
 package com.example.algamoney.api.model;
 
 import java.math.BigDecimal;
@@ -22,7 +23,7 @@ public class Lancamento {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;
-	
+
 	@NotNull
 	private String descricao;
 
@@ -52,11 +53,23 @@ public class Lancamento {
 	@JoinColumn(name = "codigo_pessoa")
 	private Pessoa pessoa;
 
+	public Lancamento() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public Lancamento(final String descricao, final LocalDate dataVencimento, final LocalDate dataPagamento) {
+		super();
+		this.descricao = descricao;
+		this.dataVencimento = dataVencimento;
+		this.dataPagamento = dataPagamento;
+	}
+
 	public Long getCodigo() {
 		return codigo;
 	}
 
-	public void setCodigo(Long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 
@@ -64,7 +77,7 @@ public class Lancamento {
 		return descricao;
 	}
 
-	public void setDescricao(String descricao) {
+	public void setDescricao(final String descricao) {
 		this.descricao = descricao;
 	}
 
@@ -72,7 +85,7 @@ public class Lancamento {
 		return dataVencimento;
 	}
 
-	public void setDataVencimento(LocalDate dataVencimento) {
+	public void setDataVencimento(final LocalDate dataVencimento) {
 		this.dataVencimento = dataVencimento;
 	}
 
@@ -80,7 +93,7 @@ public class Lancamento {
 		return dataPagamento;
 	}
 
-	public void setDataPagamento(LocalDate dataPagamento) {
+	public void setDataPagamento(final LocalDate dataPagamento) {
 		this.dataPagamento = dataPagamento;
 	}
 
@@ -88,7 +101,7 @@ public class Lancamento {
 		return valor;
 	}
 
-	public void setValor(BigDecimal valor) {
+	public void setValor(final BigDecimal valor) {
 		this.valor = valor;
 	}
 
@@ -96,7 +109,7 @@ public class Lancamento {
 		return observacao;
 	}
 
-	public void setObservacao(String observacao) {
+	public void setObservacao(final String observacao) {
 		this.observacao = observacao;
 	}
 
@@ -104,7 +117,7 @@ public class Lancamento {
 		return tipo;
 	}
 
-	public void setTipo(TipoLancamento tipo) {
+	public void setTipo(final TipoLancamento tipo) {
 		this.tipo = tipo;
 	}
 
@@ -112,7 +125,7 @@ public class Lancamento {
 		return categoria;
 	}
 
-	public void setCategoria(Categoria categoria) {
+	public void setCategoria(final Categoria categoria) {
 		this.categoria = categoria;
 	}
 
@@ -120,7 +133,7 @@ public class Lancamento {
 		return pessoa;
 	}
 
-	public void setPessoa(Pessoa pessoa) {
+	public void setPessoa(final Pessoa pessoa) {
 		this.pessoa = pessoa;
 	}
 
@@ -128,24 +141,29 @@ public class Lancamento {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
+		result = prime * result + (codigo == null ? 0 : codigo.hashCode());
 		return result;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
+	public boolean equals(final Object obj) {
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
-		Lancamento other = (Lancamento) obj;
+		}
+		final Lancamento other = (Lancamento) obj;
 		if (codigo == null) {
-			if (other.codigo != null)
+			if (other.codigo != null) {
 				return false;
-		} else if (!codigo.equals(other.codigo))
+			}
+		} else if (!codigo.equals(other.codigo)) {
 			return false;
+		}
 		return true;
 	}
 

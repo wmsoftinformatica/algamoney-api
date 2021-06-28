@@ -1,3 +1,4 @@
+
 package com.example.algamoney.api.model;
 
 import javax.persistence.Entity;
@@ -24,7 +25,7 @@ public class Categoria {
 		return codigo;
 	}
 
-	public void setCodigo(Long codigo) {
+	public void setCodigo(final Long codigo) {
 		this.codigo = codigo;
 	}
 
@@ -32,7 +33,18 @@ public class Categoria {
 		return nome;
 	}
 
-	public void setNome(String nome) {
+	public void setNome(final String nome) {
+		this.nome = nome;
+	}
+
+	public Categoria() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	// CONSTRUOR COM CAMPOS
+	public Categoria(final String nome) {
+		super();
 		this.nome = nome;
 	}
 
@@ -40,24 +52,29 @@ public class Categoria {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
+		result = prime * result + (codigo == null ? 0 : codigo.hashCode());
 		return result;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
+	public boolean equals(final Object obj) {
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
-		Categoria other = (Categoria) obj;
+		}
+		final Categoria other = (Categoria) obj;
 		if (codigo == null) {
-			if (other.codigo != null)
+			if (other.codigo != null) {
 				return false;
-		} else if (!codigo.equals(other.codigo))
+			}
+		} else if (!codigo.equals(other.codigo)) {
 			return false;
+		}
 		return true;
 	}
 

@@ -69,6 +69,11 @@ public class Pessoa {
 		this.ativo = ativo;
 	}
 
+	public Pessoa(final Long codigo) {
+		super();
+		this.codigo = codigo;
+	}
+
 	public void setAtivo(final Boolean ativo) {
 		this.ativo = ativo;
 	}

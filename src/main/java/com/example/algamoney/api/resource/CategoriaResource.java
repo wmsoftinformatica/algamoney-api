@@ -2,11 +2,18 @@
 package com.example.algamoney.api.resource;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 
+import javax.activity.InvalidActivityException;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -17,9 +24,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.algamoney.api.event.RecursoCriadoEvent;
+import com.example.algamoney.api.exportar.CategoriaExcelExporter;
 import com.example.algamoney.api.model.Categoria;
 import com.example.algamoney.api.repository.CategoriaRepository;
 
@@ -39,13 +49,13 @@ public class CategoriaResource {
 		return categoriaRepository.findAll();
 	}
 
-	@GetMapping("/exportarCategoria")
+	@GetMapping("/exportarcategoria")
 	public void exportarCategoria(final HttpServletResponse response) throws IOException {
-		categoriaRepository.findAll();
+		final List<Categoria> categoria = categoriaRepository.findAll();
 		response.setContentType("application/octet-strem");
-		// final CategoriaExcelExporter categoriaExelExporter = new CategoriaExcelExporter();
+		final CategoriaExcelExporter categoriaExelExporter = new CategoriaExcelExporter(categoria);
 
-		// categoriaExelExporter.export(response);
+		categoriaExelExporter.export(response);
 
 	}
 
@@ -56,6 +66,41 @@ public class CategoriaResource {
 		final Categoria categoriaSalva = categoriaRepository.save(categoria);
 		publisher.publishEvent(new RecursoCriadoEvent(this, response, categoriaSalva.getCodigo()));
 		return ResponseEntity.status(HttpStatus.CREATED).body(categoriaSalva);
+	}
+
+	@PostMapping("/importarcategoria")
+	public void
+			upLoad(@RequestParam final MultipartFile arquivo) throws Exception, InvalidActivityException, IOException {
+		final Workbook workbook = WorkbookFactory.create(arquivo.getInputStream());
+		final Sheet sheet = workbook.getSheetAt(0);
+		final Iterator<Row> rowIterator = sheet.rowIterator();
+
+		Integer count = 0;
+
+		while (rowIterator.hasNext()) {
+			if (count == 0) {
+				rowIterator.next();
+				count++;
+				continue;
+			}
+
+			// count++;
+
+			final Row row = rowIterator.next();
+
+			final Cell codigo = row.getCell(0);
+			final Cell nome = row.getCell(1);
+
+			final Categoria categoria = new Categoria(nome.getStringCellValue());
+			System.out.println("------------------------------------");
+			System.out.println("Codigo " + codigo);
+			System.out.println("Nome " + nome);
+			System.out.println("------------------------------------");
+
+			categoriaRepository.save(categoria);
+		}
+
+		System.out.println("TOTAL DE REGISTROS" + count);
 	}
 
 	@GetMapping("/{codigo}")

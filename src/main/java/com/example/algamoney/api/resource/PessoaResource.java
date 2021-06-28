@@ -73,14 +73,21 @@ public class PessoaResource {
 		final Workbook workbook = WorkbookFactory.create(arquivo.getInputStream());
 		final Sheet sheet = workbook.getSheetAt(0);
 		final Iterator<Row> rowIterator = sheet.rowIterator();
+		Integer count = 0;
 		while (rowIterator.hasNext()) {
+
+			if (count == 0) {
+				rowIterator.next();
+				count++;
+				continue;
+			}
 
 			String val1;
 			Boolean val2 = null;
 
 			final Row row = rowIterator.next();
 
-			row.getCell(0);
+			final Cell codigo = row.getCell(0);
 			final Cell nome = row.getCell(1);
 			final Cell logradouro = row.getCell(2);
 			final Cell numero = row.getCell(3);
@@ -107,21 +114,20 @@ public class PessoaResource {
 					CEP.getStringCellValue(),
 					cidade.getStringCellValue(),
 					estado.getStringCellValue());
-
-			System.out.println("val2>>>>>>>>>>>>>>>> " + val2);
 			final Pessoa pessoa = new Pessoa(nome.getStringCellValue(), endereco, val2);
 
 			if (val1 == "TRUE" || val1 == "FALSE") {
 				System.out.println("-------------------------------------------------------");
+				System.out.println(codigo);
 				System.out.println(nome);
-				// System.out.println(logradouro);
-				// System.out.println(numero);
-				// System.out.println(complemento);
-				// System.out.println(bairro);
-				// System.out.println(CEP);
-				// System.out.println(cidade);
-				// System.out.println(estado);
-				System.out.println("Ativo " + val1);
+				System.out.println(logradouro);
+				System.out.println(numero);
+				System.out.println(complemento);
+				System.out.println(bairro);
+				System.out.println(CEP);
+				System.out.println(cidade);
+				System.out.println(estado);
+				System.out.println("Ativo " + val2);
 				System.out.println("-------------------------------------------------------");
 
 				pessoaRepository.save(pessoa);

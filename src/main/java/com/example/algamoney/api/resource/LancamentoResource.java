@@ -1,11 +1,21 @@
+
 package com.example.algamoney.api.resource;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
@@ -22,17 +32,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.algamoney.api.event.RecursoCriadoEvent;
 import com.example.algamoney.api.exceptionhandler.AlgamoneyExceptionHandler.Erro;
+import com.example.algamoney.api.exportar.LancamentoExcelExporter;
 import com.example.algamoney.api.model.Lancamento;
 import com.example.algamoney.api.repository.LancamentoRepository;
 import com.example.algamoney.api.repository.filter.LancamentoFilter;
 import com.example.algamoney.api.repository.projection.ResumoLancamento;
 import com.example.algamoney.api.service.LancamentoService;
 import com.example.algamoney.api.service.exception.PessoaInexistenteOuInativaException;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 
 @RestController
 @RequestMapping("/lancamentos")
@@ -40,56 +54,136 @@ public class LancamentoResource {
 
 	@Autowired
 	private LancamentoRepository lancamentoRepository;
-	
+
 	@Autowired
 	private LancamentoService lancamentoService;
-	
+
 	@Autowired
 	private ApplicationEventPublisher publisher;
-	
+
 	@Autowired
 	private MessageSource messageSource;
-	
+
 	@GetMapping
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
-	public Page<Lancamento> pesquisar(LancamentoFilter lancamentoFilter, Pageable pageable) {
+	public Page<Lancamento> pesquisar(final LancamentoFilter lancamentoFilter, final Pageable pageable) {
 		return lancamentoRepository.filtrar(lancamentoFilter, pageable);
 	}
-	
+
+	@GetMapping("/exportar")
+	public void exportar(final HttpServletResponse response) throws IOException {
+		final List<Lancamento> lancamento = lancamentoRepository.findAll();
+		response.setContentType("application/octet-strem");
+
+		final LancamentoExcelExporter lancamentoExcelExporter = new LancamentoExcelExporter(lancamento);
+
+		lancamentoExcelExporter.export(response);
+
+	}
+
 	@GetMapping(params = "resumo")
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
-	public Page<ResumoLancamento> resumir(LancamentoFilter lancamentoFilter, Pageable pageable) {
+	public Page<ResumoLancamento> resumir(final LancamentoFilter lancamentoFilter, final Pageable pageable) {
 		return lancamentoRepository.resumir(lancamentoFilter, pageable);
 	}
-	
+
 	@GetMapping("/{codigo}")
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
-	public ResponseEntity<Lancamento> buscarPeloCodigo(@PathVariable Long codigo) {
-		Lancamento lancamento = lancamentoRepository.findOne(codigo);
+	public ResponseEntity<Lancamento> buscarPeloCodigo(@PathVariable final Long codigo) {
+		final Lancamento lancamento = lancamentoRepository.findOne(codigo);
 		return lancamento != null ? ResponseEntity.ok(lancamento) : ResponseEntity.notFound().build();
 	}
-	
+
+	@PostMapping("/importar")
+	public void
+			upload(@RequestParam final MultipartFile arquivo) throws Exception, InvalidFormatException, IOException {
+
+		final Workbook workbook = WorkbookFactory.create(arquivo.getInputStream());
+		final Sheet sheet = workbook.getSheetAt(0);
+		final Iterator<Row> rowIterator = sheet.rowIterator();
+
+		Integer count = 0;
+
+		while (rowIterator.hasNext()) {
+			final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			LocalDate dataVencimentoConv;
+			LocalDate dataPagamentoConv;
+			String dataVencimento2;
+			String dataPagamento2;
+
+			if (count == 0) {
+				rowIterator.next();
+				count++;
+				continue;
+			}
+
+			final Row row = rowIterator.next();
+
+			final Cell codigo = row.getCell(0);
+			final Cell descricao = row.getCell(1);
+			final Cell dataVencimento = row.getCell(2);
+			final Cell dataPagamento = row.getCell(3);
+			final Cell valor = row.getCell(4);
+			final Cell observacao = row.getCell(5);
+			final Cell tipo = row.getCell(6);
+			final Cell codigoCategoria = row.getCell(7);
+			final Cell codigoPessoa = row.getCell(8);
+
+			System.out.println(codigo);
+			System.out.println(descricao);
+			System.out.println(dataVencimento);
+			System.out.println(dataPagamento);
+			System.out.println(valor);
+			System.out.println(observacao);
+			System.out.println(tipo);
+			System.out.println(codigoCategoria);
+			System.out.println(codigoPessoa);
+
+			System.out.println("---------------------------------------------");
+
+			dataVencimento2 = dataVencimento.toString();
+			dataPagamento2 = dataPagamento.toString();
+
+			dataVencimentoConv = LocalDate.parse(dataVencimento2, formatter);
+			dataPagamentoConv = LocalDate.parse(dataPagamento2, formatter);
+
+			System.out.println("Data Vencimento String------------" + dataVencimento2);
+			System.out.println("Data Convertida-------------------" + dataVencimentoConv);
+			System.out.println("Data pagamento convertida---------" + dataPagamentoConv);
+			System.out.println("Valor-----------------------------" + valor);
+
+			 final Lancamento lancamento = new Lancamento(descricao.getStringCellValue(), dataVencimentoConv, dataPagamentoConv);
+
+			// lancamentoRepository.save(lancamento);
+
+		}
+
+	}
+
 	@PostMapping
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasScope('write')")
-	public ResponseEntity<Lancamento> criar(@Valid @RequestBody Lancamento lancamento, HttpServletResponse response) {
-		Lancamento lancamentoSalvo = lancamentoService.salvar(lancamento);
+	public ResponseEntity<Lancamento> criar(@Valid @RequestBody final Lancamento lancamento,
+			final HttpServletResponse response) {
+		final Lancamento lancamentoSalvo = lancamentoService.salvar(lancamento);
 		publisher.publishEvent(new RecursoCriadoEvent(this, response, lancamentoSalvo.getCodigo()));
 		return ResponseEntity.status(HttpStatus.CREATED).body(lancamentoSalvo);
 	}
-	
+
 	@ExceptionHandler({ PessoaInexistenteOuInativaException.class })
-	public ResponseEntity<Object> handlePessoaInexistenteOuInativaException(PessoaInexistenteOuInativaException ex) {
-		String mensagemUsuario = messageSource.getMessage("pessoa.inexistente-ou-inativa", null, LocaleContextHolder.getLocale());
-		String mensagemDesenvolvedor = ex.toString();
-		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
+	public ResponseEntity<Object>
+			handlePessoaInexistenteOuInativaException(final PessoaInexistenteOuInativaException ex) {
+		final String mensagemUsuario =
+				messageSource.getMessage("pessoa.inexistente-ou-inativa", null, LocaleContextHolder.getLocale());
+		final String mensagemDesenvolvedor = ex.toString();
+		final List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
 		return ResponseEntity.badRequest().body(erros);
 	}
-	
+
 	@DeleteMapping("/{codigo}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@PreAuthorize("hasAuthority('ROLE_REMOVER_LANCAMENTO') and #oauth2.hasScope('write')")
-	public void remover(@PathVariable Long codigo) {
+	public void remover(@PathVariable final Long codigo) {
 		lancamentoRepository.delete(codigo);
 	}
-	
+
 }
