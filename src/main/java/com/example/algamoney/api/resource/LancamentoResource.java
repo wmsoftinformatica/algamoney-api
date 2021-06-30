@@ -106,9 +106,14 @@ public class LancamentoResource {
 
 		Integer count = 0;
 
+		Cell cellCodigo;
+
 		String descricao;
 		TipoLancamento tipo;
 		Cell cellDescricao;
+
+		Cell cellCodigoCategoria;
+		String codigoCategoria;
 
 		while (rowIterator.hasNext()) {
 			final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -118,7 +123,6 @@ public class LancamentoResource {
 			String dataPagamento2;
 			String valor2;
 			BigDecimal valorConv;
-
 			if (count == 0) {
 				rowIterator.next();
 				count++;
@@ -127,29 +131,31 @@ public class LancamentoResource {
 
 			final Row row = rowIterator.next();
 
-			final Cell codigo = row.getCell(0);
+			cellCodigo = row.getCell(0);
 			cellDescricao = row.getCell(1);
+			descricao = cellDescricao.getStringCellValue();
+
 			final Cell dataVencimento = row.getCell(2);
 			final Cell dataPagamento = row.getCell(3);
 			final Cell valor = row.getCell(4);
 			final Cell observacao = row.getCell(5);
 
 			final Cell celltipo = row.getCell(6);
-
-			final Cell codigoCategoria = row.getCell(7);
-			final Cell codigoPessoa = row.getCell(8);
-
-			descricao = cellDescricao.getStringCellValue();
 			tipo = celltipo == null ? null : TipoLancamento.valueOf(celltipo.getStringCellValue().trim());
 
-			System.out.println(codigo);
+			cellCodigoCategoria = row.getCell(7);
+			codigoCategoria = cellCodigoCategoria.getStringCellValue();
+
+			final Cell codigoPessoa = row.getCell(8);
+
+			System.out.println(cellCodigo);
 			System.out.println(descricao);
 			System.out.println(dataVencimento);
 			System.out.println(dataPagamento);
 			System.out.println(valor);
 			System.out.println(observacao);
 			System.out.println(tipo);
-			System.out.println(codigoCategoria);
+			System.out.println(cellCodigoCategoria);
 			System.out.println(codigoPessoa);
 
 			System.out.println("---------------------------------------------");
@@ -160,10 +166,9 @@ public class LancamentoResource {
 			dataVencimentoConv = LocalDate.parse(dataVencimento2, formatter);
 			dataPagamentoConv = LocalDate.parse(dataPagamento2, formatter);
 			valor2 = valor.toString();
-
 			valorConv = new BigDecimal(valor2);
 
-			// final Categoria categoria = new Categoria(Categoria.);
+			// final Categoria categoria = new Categoria(codigoCategoria.getStringCellValue());
 
 			System.out.println("Descricao-------------------------" + descricao);
 			System.out.println("Data Vencimento-------------------" + dataVencimentoConv);

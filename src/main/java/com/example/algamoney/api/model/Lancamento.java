@@ -39,16 +39,16 @@ public class Lancamento {
 
 	private String observacao;
 
-	// @NotNull
+	@NotNull
 	@Enumerated(EnumType.STRING)
 	private TipoLancamento tipo;
 
-	// @NotNull
+	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "codigo_categoria")
 	private Categoria categoria;
 
-	// @NotNull
+	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "codigo_pessoa")
 	private Pessoa pessoa;
