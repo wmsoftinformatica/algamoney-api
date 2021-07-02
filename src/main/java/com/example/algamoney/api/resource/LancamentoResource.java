@@ -41,7 +41,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.algamoney.api.event.RecursoCriadoEvent;
 import com.example.algamoney.api.exceptionhandler.AlgamoneyExceptionHandler.Erro;
 import com.example.algamoney.api.exportar.LancamentoExcelExporter;
+import com.example.algamoney.api.model.Categoria;
 import com.example.algamoney.api.model.Lancamento;
+import com.example.algamoney.api.model.Pessoa;
 import com.example.algamoney.api.model.TipoLancamento;
 import com.example.algamoney.api.repository.LancamentoRepository;
 import com.example.algamoney.api.repository.filter.LancamentoFilter;
@@ -106,23 +108,30 @@ public class LancamentoResource {
 
 		Integer count = 0;
 
-		Cell cellCodigo;
+		final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate dataVencimentoConv;
+		LocalDate dataPagamentoConv;
+		String dataVencimento2;
+		String dataPagamento2;
+		String valor2;
+		BigDecimal valorConv;
+
+		double codigoCategoriaDouble;
+		String codigoCategoriaString;
+		Long codigoCategoriaLong;
+
+		TipoLancamento tipo;
 
 		String descricao;
-		TipoLancamento tipo;
 		Cell cellDescricao;
 
-		Cell cellCodigoCategoria;
-		String codigoCategoria;
+		Cell cellCodigoPessoa;
+		String codigoPessoaString;
+		double codigoPessoaDouble;
+		Long codigoPessoaLong;
 
 		while (rowIterator.hasNext()) {
-			final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-			LocalDate dataVencimentoConv;
-			LocalDate dataPagamentoConv;
-			String dataVencimento2;
-			String dataPagamento2;
-			String valor2;
-			BigDecimal valorConv;
+
 			if (count == 0) {
 				rowIterator.next();
 				count++;
@@ -131,7 +140,7 @@ public class LancamentoResource {
 
 			final Row row = rowIterator.next();
 
-			cellCodigo = row.getCell(0);
+			row.getCell(0);
 			cellDescricao = row.getCell(1);
 			descricao = cellDescricao.getStringCellValue();
 
@@ -143,22 +152,19 @@ public class LancamentoResource {
 			final Cell celltipo = row.getCell(6);
 			tipo = celltipo == null ? null : TipoLancamento.valueOf(celltipo.getStringCellValue().trim());
 
-			cellCodigoCategoria = row.getCell(7);
-			codigoCategoria = cellCodigoCategoria.getStringCellValue();
+			final Cell cellCodigoCategoria = row.getCell(7);
 
-			final Cell codigoPessoa = row.getCell(8);
+			codigoCategoriaDouble = cellCodigoCategoria.getNumericCellValue();
+			codigoCategoriaString = String.valueOf(codigoCategoriaDouble);
+			codigoCategoriaString = codigoCategoriaString.replace(".0", "");
+			codigoCategoriaLong = Long.parseLong(codigoCategoriaString);
 
-			System.out.println(cellCodigo);
-			System.out.println(descricao);
-			System.out.println(dataVencimento);
-			System.out.println(dataPagamento);
-			System.out.println(valor);
-			System.out.println(observacao);
-			System.out.println(tipo);
-			System.out.println(cellCodigoCategoria);
-			System.out.println(codigoPessoa);
+			cellCodigoPessoa = row.getCell(8);
 
-			System.out.println("---------------------------------------------");
+			codigoPessoaDouble = cellCodigoPessoa.getNumericCellValue();
+			codigoPessoaString = String.valueOf(codigoPessoaDouble);
+			codigoPessoaString = codigoPessoaString.replace(".0", "");
+			codigoPessoaLong = Long.parseLong(codigoPessoaString);
 
 			dataVencimento2 = dataVencimento.toString();
 			dataPagamento2 = dataPagamento.toString();
@@ -168,21 +174,17 @@ public class LancamentoResource {
 			valor2 = valor.toString();
 			valorConv = new BigDecimal(valor2);
 
-			// final Categoria categoria = new Categoria(codigoCategoria.getStringCellValue());
-
-			System.out.println("Descricao-------------------------" + descricao);
-			System.out.println("Data Vencimento-------------------" + dataVencimentoConv);
-			System.out.println("Data Pagamento--------------------" + dataPagamentoConv);
-			System.out.println("Valor-----------------------------" + valorConv);
-			System.out.println("Observacao------------------------" + observacao);
-			System.out.println("Codigo Categoria------------------" + codigoCategoria);
+			final Categoria categoria = new Categoria(codigoCategoriaLong);
+			final Pessoa pessoa = new Pessoa(codigoPessoaLong);
 
 			final Lancamento lancamento = new Lancamento(descricao,
 					dataVencimentoConv,
 					dataPagamentoConv,
 					valorConv,
 					observacao.getStringCellValue(),
-					tipo);
+					tipo,
+					categoria,
+					pessoa);
 
 			lancamentoRepository.save(lancamento);
 

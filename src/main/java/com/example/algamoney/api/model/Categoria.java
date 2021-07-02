@@ -48,10 +48,10 @@ public class Categoria {
 		this.nome = nome;
 	}
 
-	// public Categoria(final Long codigo) {
-	// super();
-	// this.codigo = codigo;
-	// }
+	public Categoria(final Long codigo) {
+		super();
+		this.codigo = codigo;
+	}
 
 	@Override
 	public int hashCode() {

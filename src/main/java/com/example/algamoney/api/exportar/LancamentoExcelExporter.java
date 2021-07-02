@@ -22,7 +22,7 @@ public class LancamentoExcelExporter {
 	public LancamentoExcelExporter(final List<Lancamento> lancamento) {
 		workbook = new XSSFWorkbook();
 
-		sheet = workbook.createSheet("LANCAMENTOEXPORT");
+		sheet = workbook.createSheet("LAMÇAMENTOS");
 		listLancamento = lancamento;
 
 	}

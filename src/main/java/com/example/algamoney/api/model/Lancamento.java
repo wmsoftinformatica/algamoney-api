@@ -63,7 +63,9 @@ public class Lancamento {
 			final LocalDate dataPagamento,
 			final BigDecimal valor,
 			final String observacao,
-			final TipoLancamento tipo) {
+			final TipoLancamento tipo,
+			final Categoria categoria,
+			final Pessoa pessoa) {
 		super();
 		this.descricao = descricao;
 		this.dataVencimento = dataVencimento;
@@ -71,6 +73,8 @@ public class Lancamento {
 		this.valor = valor;
 		this.observacao = observacao;
 		this.tipo = tipo;
+		this.categoria = categoria;
+		this.pessoa = pessoa;
 
 	}
 
